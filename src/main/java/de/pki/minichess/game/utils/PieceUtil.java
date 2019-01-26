@@ -38,7 +38,7 @@ public class PieceUtil {
         int score = 0;
         score = getScorePerPiece(piece);
         if (getColorForPiece(piece) != currentPlayer) {
-            score *= -1;
+            score = score * (-1);
         }
         return score;
     }
@@ -64,6 +64,8 @@ public class PieceUtil {
             case 'k':
                 score = 5000;
                 break;
+            case '.':
+                score = 0;
         }
         return score;
     }

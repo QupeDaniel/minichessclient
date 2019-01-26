@@ -83,7 +83,7 @@ public class MoveService {
         int score = 0;
         for (int row = 0; row < 6; row++) {
             for (int column = 0; column < 5; column++)
-                score += PieceUtil.getScorePerPieceAndPlayerColor(board[row][column], playerColor);
+                score = score + PieceUtil.getScorePerPieceAndPlayerColor(board[row][column], playerColor);
         }
         return score;
     }

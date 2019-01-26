@@ -113,8 +113,7 @@ public class Console {
       response = this.rerate();
       break;
     case START:
-      this.runGame();
-      response = "";
+      response = this.runGame();;
       break;
     case EXIT:
       response = this.exit();
@@ -217,8 +216,8 @@ public class Console {
 
   }
 
-  private void runGame() throws IOException {
-    new GameController().runGame(color, client);
+  private String runGame() throws IOException {
+    return new GameController().runGame(color, client);
   }
 
   private String exit() throws IOException {

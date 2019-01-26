@@ -234,7 +234,7 @@ public class State {
     private boolean checkForGameOver(Move move) {
         char targetPiece = Character.toLowerCase(board[move.getTo().getY()][move.getTo().getX()]);
         if (targetPiece == 'k') {
-            System.out.println("Schach-Matt");
+            System.out.println("Schach-Matt - " + currentPlayer + " gewinnt");
             return true;
         }
         if ((moveNumber == 40) && (currentPlayer == Color.BLACK)) {

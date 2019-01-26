@@ -9,6 +9,8 @@ import java.io.IOException;
  */
 public class MinichessApplication {
 
+    private boolean locale = true;
+
     /**
      * Initializes two players with given ai and plays a game of minichess
      * dirty loop stops if a move finishes the game
@@ -16,6 +18,28 @@ public class MinichessApplication {
      * @param args
      */
     public static void main(String[] args) {
+
+
+//        State gameState = new State();
+//        PlayerRandom whitePlayer = new PlayerRandom(Color.WHITE);
+//        PlayerRandomStateEval blackPlayer = new PlayerRandomStateEval(Color.BLACK);
+//
+//        boolean gameOver = false;
+//
+//        while (!gameOver) {
+//            Move nextMove = null;
+//
+//            if (gameState.getCurrentPlayer() == Color.WHITE) {
+//                nextMove = whitePlayer.pickMove(gameState.getBoard());
+//            } else if (gameState.getCurrentPlayer() == Color.BLACK) {
+//                nextMove = blackPlayer.pickMove(gameState.getBoard());
+//            }
+//            gameOver = gameState.moveByMove(nextMove);
+//
+//            System.out.println(nextMove.getChessNotation());
+//            System.out.println("------------------\n");
+//            System.out.println(gameState.getCurrentStateToString() + "\n");
+//        }
 
         try {
             Console console = new Console();

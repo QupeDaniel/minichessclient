@@ -1,6 +1,6 @@
 package de.pki.minichess.game;
 
-import de.pki.minichess.ai.PlayerRandom;
+import de.pki.minichess.ai.PlayerRandomStateEval;
 import de.pki.minichess.client.connector.Client;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class GameController {
      *
      * @return The game steps until game finishes.
      */
-    public void runGame(String color, Client client) {
+    public String runGame(String color, Client client) {
         State gameState = new State();
         Color playerColor = Color.BLACK;
 
@@ -28,37 +28,39 @@ public class GameController {
             playerColor = Color.WHITE;
         }
 
-        PlayerRandom player = new PlayerRandom(playerColor);
+        PlayerRandomStateEval player = new PlayerRandomStateEval(playerColor);
 
-//        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         boolean gameOver = false;
-        Move nextMove = null;
+        Move nextMove;
 
         while (!gameOver) {
+            System.out.println(gameState.getCurrentPlayer() + " zieht:\n");
+            nextMove = null;
             if (player.color == gameState.getCurrentPlayer()) {
                 nextMove = player.pickMove(gameState.getBoard());
                 try {
-                    System.out.println(nextMove.getChessNotation());
                     client.sendMove(nextMove.getChessNotation());
+                    System.out.println(nextMove.getChessNotation());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 // An den Client gesendet
-//            builder.append(nextMove + "\n");
-            } else if (player.color != gameState.getCurrentPlayer()) {
+                builder.append(nextMove.getChessNotation() + "\n");
+            } else {
                 try {
-                    nextMove = new Move(client.getMove());// Client get move
+                    nextMove = new Move(client.getMove());
+                    System.out.println(nextMove.getChessNotation());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-
             gameOver = gameState.moveByMove(nextMove);
 
-//            builder.append("------------------\n");
-//            builder.append(gameState.getCurrentStateToString() + "\n");
+            builder.append("------------------\n");
+            builder.append(gameState.getCurrentStateToString() + "\n");
         }
-//        return builder.toString();
+        return builder.toString();
     }
 
 }

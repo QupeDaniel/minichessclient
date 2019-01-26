@@ -43,9 +43,7 @@ public class Square {
     }
 
     public char getXChessNotation() {
-
-        int offsetX = 97;
-        return (char) (x + offsetX);
+        return (char) (x + 'a');
     }
 
     public int getYChessNotation() {
