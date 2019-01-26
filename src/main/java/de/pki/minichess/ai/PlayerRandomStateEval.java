@@ -1,20 +1,16 @@
 package de.pki.minichess.ai;
 
-import de.pki.minichess.game.Color;
-import de.pki.minichess.game.Move;
-import de.pki.minichess.game.MoveService;
-import de.pki.minichess.game.Square;
+import de.pki.minichess.game.*;
 import de.pki.minichess.game.utils.PieceUtil;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.Vector;
 
-/**
- * Implementation of Random AI Player
- */
-public class PlayerRandom implements IPlayer {
+public class PlayerRandomStateEval implements IPlayer {
 
-    public Color color;
+    private Color color;
     private Random rand = new Random();
 
     /**
@@ -22,7 +18,7 @@ public class PlayerRandom implements IPlayer {
      *
      * @param color color of the player
      */
-    public PlayerRandom(Color color) {
+    public PlayerRandomStateEval(Color color) {
         this.color = color;
     }
 
@@ -30,11 +26,29 @@ public class PlayerRandom implements IPlayer {
     public Move pickMove(char[][] board) {
         Vector<Square> currentPlayerPieces = scanPiecesForCurrentPlayer(board);
         Vector<Move> possibleMoves = new Vector<>();
+
+        int scoreCurrentBoard = MoveService.scoreState(board, this.color);
         for (Square piece : currentPlayerPieces) {
             possibleMoves.addAll(MoveService.getPossibleMoves(piece.getX(), piece.getY(), board));
         }
-        int nextMoveIndex = rand.nextInt(possibleMoves.size());
-        return possibleMoves.get(nextMoveIndex);
+
+        Move bestMove = possibleMoves.get(0);
+        int bestScore = -1000000;
+
+        for (Move move : possibleMoves) {
+            State currentState = new State();
+            currentState.setBoard(board);
+            currentState.moveByMove(move);
+            char[][] nextBoard = currentState.getBoard();
+            int score = MoveService.scoreState(nextBoard, this.color);
+
+            if (score > bestScore) {
+                bestScore = score;
+                bestMove = move;
+            }
+        }
+
+        return bestMove;
     }
 
     private Vector<Square> scanPiecesForCurrentPlayer(char[][] board) {

@@ -9,10 +9,11 @@ import java.util.Vector;
  */
 public class MoveService {
 
-    private enum Capture {
-        TRUE, FALSE, ONLY
-    }
 
+
+    private enum Capture {
+        TRUE, FALSE, ONLY;
+    }
     /**
      * Checks if a given move is valid on a given board.
      *
@@ -76,6 +77,15 @@ public class MoveService {
                 break;
         }
         return moves;
+    }
+
+    public static int scoreState(char[][] board, Color playerColor) {
+        int score = 0;
+        for (int row = 0; row < 6; row++) {
+            for (int column = 0; column < 5; column++)
+                score += PieceUtil.getScorePerPieceAndPlayerColor(board[row][column], playerColor);
+        }
+        return score;
     }
 
 

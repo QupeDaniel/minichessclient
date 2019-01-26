@@ -34,4 +34,37 @@ public class PieceUtil {
     }
 
 
+    public static int getScorePerPieceAndPlayerColor(char piece, Color currentPlayer) {
+        int score = 0;
+        score = getScorePerPiece(piece);
+        if (getColorForPiece(piece) != currentPlayer) {
+            score *= -1;
+        }
+        return score;
+    }
+
+    private static int getScorePerPiece(char piece) {
+        int score = 0;
+        switch (Character.toLowerCase(piece)) {
+            case 'p':
+                score = 100;
+                break;
+            case 'b':
+                score = 300;
+                break;
+            case 'n':
+                score = 300;
+                break;
+            case 'r':
+                score = 500;
+                break;
+            case 'q':
+                score = 900;
+                break;
+            case 'k':
+                score = 5000;
+                break;
+        }
+        return score;
+    }
 }

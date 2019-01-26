@@ -1,9 +1,5 @@
 package de.pki.minichess.game;
 
-import de.pki.minichess.game.Color;
-import de.pki.minichess.game.Move;
-import de.pki.minichess.game.MoveService;
-import de.pki.minichess.game.Square;
 import de.pki.minichess.game.utils.PieceUtil;
 
 /**
@@ -18,7 +14,7 @@ public class State {
     /**
      * Generate new State with initial settings
      */
-    State() {
+    public State() {
         board = new char[][]{
                 {'k', 'q', 'b', 'n', 'r'},
                 {'p', 'p', 'p', 'p', 'p'},

@@ -20,6 +20,15 @@ public class Move {
         this.to = to;
     }
 
+    Move(String chessnotationMove) {
+        String[] squares = chessnotationMove.split("-");
+        Square squareFrom = new Square(squares[0]);
+        Square squareTo = new Square(squares[1]);
+
+        this.from = squareFrom;
+        this.to = squareTo;
+    }
+
     /**
      * Getter starting position
      *
@@ -45,6 +54,11 @@ public class Move {
      */
     public String toString() {
         return from.getX() + "," + from.getY() + "-" + to.getX() + "," + to.getY();
+    }
+
+
+    public String getChessNotation() {
+        return from.getXChessNotation() + "" + from.getYChessNotation() + "-" + to.getXChessNotation() + "" + to.getYChessNotation();
     }
 
     /**
