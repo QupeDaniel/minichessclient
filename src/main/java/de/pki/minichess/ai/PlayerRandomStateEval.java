@@ -1,9 +1,7 @@
 package de.pki.minichess.ai;
 
 import de.pki.minichess.game.*;
-import de.pki.minichess.game.utils.PieceUtil;
 
-import java.util.Arrays;
 import java.util.Random;
 import java.util.Vector;
 
@@ -41,7 +39,16 @@ public class PlayerRandomStateEval implements IPlayer {
             tempBoard.setPieceByPosition(move.getTo().getX(), move.getTo().getY(), pieceToMove);
             tempBoard.setPieceByPosition(move.getFrom().getX(), move.getFrom().getY(), new Piece('.'));
 
-            int score = MoveService.scoreState(tempBoard, this.color);
+            int score = 0;
+
+            switch (color) {
+                case WHITE:
+                    score = tempBoard.getScoreWhite() - tempBoard.getScoreBlack();
+                    break;
+                case BLACK:
+                    score = tempBoard.getScoreBlack() - tempBoard.getScoreWhite();
+                    break;
+            }
             System.out.println("Move " + move.getChessNotation() + " bringt " + score);
             if (score > bestScore) {
                 bestScore = score;

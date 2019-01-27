@@ -1,7 +1,5 @@
 package de.pki.minichess.game;
 
-import de.pki.minichess.game.utils.PieceUtil;
-
 /**
  * Holds the current state of a minichessgame
  */

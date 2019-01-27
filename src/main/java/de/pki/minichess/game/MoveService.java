@@ -1,7 +1,5 @@
 package de.pki.minichess.game;
 
-import de.pki.minichess.game.utils.PieceUtil;
-
 import java.util.Vector;
 
 /**
@@ -78,16 +76,6 @@ public class MoveService {
         }
         return moves;
     }
-
-    public static int scoreState(Board board, Color playerColor) {
-        int score = 0;
-        for (int row = 0; row < 6; row++) {
-            for (int column = 0; column < 5; column++)
-                score = score + PieceUtil.getScorePerPieceAndPlayerColor(board.getPieceByPosition(column, row), playerColor);
-        }
-        return score;
-    }
-
 
     /**
      * Scans for possible moves in all four rotational symetries.
