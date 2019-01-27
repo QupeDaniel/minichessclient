@@ -118,27 +118,17 @@ public class State {
      */
     public boolean moveByMove(Move move) {
 
-        char pieceToMove = board.getPieceByPosition(move.getFrom().getX(), move.getFrom().getY()).getChar();
-        if (isValidStartPiece(pieceToMove) && MoveService.isMoveValid(move, board.getCharArray())) {
+        Piece pieceToMove = board.getPieceByPosition(move.getFrom().getX(), move.getFrom().getY());
+        if (isValidStartPiece(pieceToMove) && MoveService.isMoveValid(move, board)) {
             if (checkForGameOver(move)) return true;
             if (canPieceBePromoted(pieceToMove, move.getTo().getY())) {
-                pieceToMove = promotePawn(pieceToMove);
+                pieceToMove.promote();
             }
             board.setPieceByPosition(move.getTo().getX(), move.getTo().getY(), pieceToMove);
-            board.setPieceByPosition(move.getFrom().getX(), move.getFrom().getY(), '.');
+            board.setPieceByPosition(move.getFrom().getX(), move.getFrom().getY(), new Piece('.'));
             switchCurrentPlayer();
         }
         return false;
-    }
-
-    /**
-     * Promotes a pawn to queen
-     *
-     * @param pieceToMove piece to promote
-     * @return
-     */
-    private char promotePawn(char pieceToMove) {
-        return (char) (((int) pieceToMove) + 1);
     }
 
     /**
@@ -148,8 +138,8 @@ public class State {
      * @param yDestination y destination position
      * @return
      */
-    private boolean canPieceBePromoted(char pieceToMove, int yDestination) {
-        if (Character.toLowerCase(pieceToMove) != 'p') { //only check for pawns
+    private boolean canPieceBePromoted(Piece pieceToMove, int yDestination) {
+        if (pieceToMove.getFigure() != Figure.PAWN) { //only check for pawns
             return false;
         }
         if (currentPlayer == Color.BLACK && yDestination == 5) { // black pawn reaches end of board
@@ -179,10 +169,10 @@ public class State {
      * @param pieceToMove start piece of a move
      * @return
      */
-    private boolean isValidStartPiece(char pieceToMove) {
-        if (currentPlayer != PieceUtil.getColorForPiece(pieceToMove))
+    private boolean isValidStartPiece(Piece pieceToMove) {
+        if (currentPlayer != pieceToMove.getColor())
             return false;
-        if (pieceToMove == '.')
+        if (pieceToMove.getFigure() == Figure.EMPTY)
             return false;
 
         return true;

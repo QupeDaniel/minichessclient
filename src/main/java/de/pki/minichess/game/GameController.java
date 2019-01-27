@@ -38,7 +38,7 @@ public class GameController {
             System.out.println(gameState.getCurrentPlayer() + " zieht:\n");
             nextMove = null;
             if (player.color == gameState.getCurrentPlayer()) {
-                nextMove = player.pickMove(gameState.getBoard().getCharArray());
+                nextMove = player.pickMove(gameState.getBoard());
                 try {
                     client.sendMove(nextMove.getChessNotation());
                     System.out.println(nextMove.getChessNotation());

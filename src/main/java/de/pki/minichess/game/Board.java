@@ -1,5 +1,7 @@
 package de.pki.minichess.game;
 
+import java.util.Arrays;
+
 public class Board {
     private Piece[][] board;
 
@@ -27,11 +29,17 @@ public class Board {
         }
     }
 
+    public Board(Board board) {
+        Piece[][] tempBoard = board.getBoard();
+        this.board = deepCopy(tempBoard);
+
+    }
+
     public Piece getPieceByPosition(int x, int y) {
         return board[y][x];
     }
 
-    public String toString(){
+    public String toString() {
         StringBuilder stringBuilderBoard = new StringBuilder();
         for (int row = 0; row < 6; row++) {
             stringBuilderBoard.append("\n");
@@ -42,24 +50,23 @@ public class Board {
         return stringBuilderBoard.toString();
     }
 
-    @Deprecated
-    public char[][] getCharArray() {
-        char[][] boardAsChar = new char[6][5];
-        for (int row = 0; row < 6; row++) {
-            for (int column = 0; column < 5; column++) {
-                boardAsChar[row][column] = board[row][column].getChar();
-            }
-        }
-        return boardAsChar;
-    }
-
-    @Deprecated
-    public void setPieceByPosition(int x, int y, char pieceToMove) {
-        Piece pieceToSet = new Piece(pieceToMove);
+    public void setPieceByPosition(int x, int y, Piece pieceToSet) {
         board[y][x] = pieceToSet;
     }
 
     public Piece[][] getBoard() {
         return board;
+    }
+
+    private Piece[][] deepCopy(Piece[][] board) {
+        if (board == null) {
+            return null;
+        }
+
+        final Piece[][] result = new Piece[board.length][];
+        for (int i = 0; i < board.length; i++) {
+            result[i] = Arrays.copyOf(board[i], board[i].length);
+        }
+        return result;
     }
 }

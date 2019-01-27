@@ -1,10 +1,6 @@
 package de.pki.minichess.ai;
 
-import de.pki.minichess.game.Color;
-import de.pki.minichess.game.Move;
-import de.pki.minichess.game.MoveService;
-import de.pki.minichess.game.Square;
-import de.pki.minichess.game.utils.PieceUtil;
+import de.pki.minichess.game.*;
 
 import java.util.Random;
 import java.util.Vector;
@@ -27,7 +23,7 @@ public class PlayerRandom implements IPlayer {
     }
 
     @Override
-    public Move pickMove(char[][] board) {
+    public Move pickMove(Board board) {
         Vector<Square> currentPlayerPieces = scanPiecesForCurrentPlayer(board);
         Vector<Move> possibleMoves = new Vector<>();
         for (Square piece : currentPlayerPieces) {
@@ -37,11 +33,11 @@ public class PlayerRandom implements IPlayer {
         return possibleMoves.get(nextMoveIndex);
     }
 
-    private Vector<Square> scanPiecesForCurrentPlayer(char[][] board) {
+    private Vector<Square> scanPiecesForCurrentPlayer(Board board) {
         Vector<Square> ownedPieces = new Vector<>();
         for (int row = 0; row < 6; row++) {
             for (int column = 0; column < 5; column++) {
-                if (PieceUtil.getColorForPiece(board[row][column]) == color) {
+                if (board.getPieceByPosition(column, row).getColor() == color) {
                     ownedPieces.add(new Square(column, row));
                 }
             }

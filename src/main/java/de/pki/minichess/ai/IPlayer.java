@@ -1,5 +1,6 @@
 package de.pki.minichess.ai;
 
+import de.pki.minichess.game.Board;
 import de.pki.minichess.game.Move;
 
 /**
@@ -13,5 +14,5 @@ public interface IPlayer {
      * @param board current board to pick a move from
      * @return Picked Move
      */
-    Move pickMove(char[][] board);
+    Move pickMove(Board board);
 }

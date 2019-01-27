@@ -1,9 +1,6 @@
 package de.pki.minichess.ai;
 
-import de.pki.minichess.game.Color;
-import de.pki.minichess.game.Move;
-import de.pki.minichess.game.MoveService;
-import de.pki.minichess.game.Square;
+import de.pki.minichess.game.*;
 import de.pki.minichess.game.utils.PieceUtil;
 
 import java.util.Arrays;
@@ -25,11 +22,10 @@ public class PlayerRandomStateEval implements IPlayer {
     }
 
     @Override
-    public Move pickMove(char[][] board) {
+    public Move pickMove(Board board) {
         Vector<Square> currentPlayerPieces = scanPiecesForCurrentPlayer(board);
         Vector<Move> possibleMoves = new Vector<>();
 
-        int scoreCurrentBoard = MoveService.scoreState(board, this.color);
         for (Square piece : currentPlayerPieces) {
             possibleMoves.addAll(MoveService.getPossibleMoves(piece.getX(), piece.getY(), board));
         }
@@ -40,10 +36,10 @@ public class PlayerRandomStateEval implements IPlayer {
 
         for (Move move : possibleMoves) {
 
-            char[][] tempBoard = deepCopy(board);
-            char pieceToMove = tempBoard[move.getFrom().getY()][move.getFrom().getX()];
-            tempBoard[move.getTo().getY()][move.getTo().getX()] = pieceToMove;
-            tempBoard[move.getFrom().getY()][move.getFrom().getX()] = '.';
+            Board tempBoard = new Board(board);
+            Piece pieceToMove = tempBoard.getPieceByPosition(move.getFrom().getX(), move.getFrom().getY());
+            tempBoard.setPieceByPosition(move.getTo().getX(), move.getTo().getY(), pieceToMove);
+            tempBoard.setPieceByPosition(move.getFrom().getX(), move.getFrom().getY(), new Piece('.'));
 
             int score = MoveService.scoreState(tempBoard, this.color);
             System.out.println("Move " + move.getChessNotation() + " bringt " + score);
@@ -56,25 +52,11 @@ public class PlayerRandomStateEval implements IPlayer {
         return bestMove;
     }
 
-    private char[][] deepCopy(char[][] board) {
-        if (board == null) {
-            return null;
-        }
-
-        final char[][] result = new char[board.length][];
-        for (int i = 0; i < board.length; i++) {
-            result[i] = Arrays.copyOf(board[i], board[i].length);
-            // For Java versions prior to Java 6 use the next:
-            // System.arraycopy(original[i], 0, result[i], 0, original[i].length);
-        }
-        return result;
-    }
-
-    private Vector<Square> scanPiecesForCurrentPlayer(char[][] board) {
+    private Vector<Square> scanPiecesForCurrentPlayer(Board board) {
         Vector<Square> ownedPieces = new Vector<>();
         for (int row = 0; row < 6; row++) {
             for (int column = 0; column < 5; column++) {
-                if (PieceUtil.getColorForPiece(board[row][column]) == color) {
+                if (board.getPieceByPosition(column, row).getColor() == color) {
                     ownedPieces.add(new Square(column, row));
                 }
             }
