@@ -91,10 +91,10 @@ public class Board {
                 Piece pieceToScore = this.board[row][column];
                 switch (pieceToScore.getColor()) {
                     case WHITE:
-                        scoreWhite = +pieceToScore.getScore();
+                        scoreWhite += pieceToScore.getScore();
                         break;
                     case BLACK:
-                        scoreBlack = +pieceToScore.getScore();
+                        scoreBlack += pieceToScore.getScore();
                         break;
                 }
             }
