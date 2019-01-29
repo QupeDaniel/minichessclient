@@ -53,6 +53,7 @@ public class Board {
 
     public void setPieceByPosition(int x, int y, Piece pieceToSet) {
         board[y][x] = pieceToSet;
+        calculateScoreForBoard();
     }
 
     public Piece[][] getBoard() {
