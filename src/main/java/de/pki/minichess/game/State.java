@@ -1,32 +1,19 @@
 package de.pki.minichess.game;
 
-import de.pki.minichess.game.Color;
-import de.pki.minichess.game.Move;
-import de.pki.minichess.game.MoveService;
-import de.pki.minichess.game.Square;
-import de.pki.minichess.game.utils.PieceUtil;
-
 /**
  * Holds the current state of a minichessgame
  */
 public class State {
 
-    private char[][] board;
+    private Board board;
     private int moveNumber;
     private Color currentPlayer;
 
     /**
      * Generate new State with initial settings
      */
-    State() {
-        board = new char[][]{
-                {'k', 'q', 'b', 'n', 'r'},
-                {'p', 'p', 'p', 'p', 'p'},
-                {'.', '.', '.', '.', '.'},
-                {'.', '.', '.', '.', '.'},
-                {'P', 'P', 'P', 'P', 'P'},
-                {'R', 'N', 'B', 'Q', 'K'}
-        };
+    public State() {
+        board = new Board();
         moveNumber = 1;
         currentPlayer = Color.WHITE;
     }
@@ -36,7 +23,7 @@ public class State {
      *
      * @return
      */
-    public char[][] getBoard() {
+    public Board getBoard() {
         return board;
     }
 
@@ -45,7 +32,7 @@ public class State {
      *
      * @param board
      */
-    public void setBoard(char[][] board) {
+    private void setBoard(Board board) {
         this.board = board;
     }
 
@@ -63,7 +50,7 @@ public class State {
      *
      * @param moveNumber
      */
-    public void setMoveNumber(int moveNumber) {
+    private void setMoveNumber(int moveNumber) {
         this.moveNumber = moveNumber;
     }
 
@@ -77,31 +64,13 @@ public class State {
     }
 
     /**
-     * Getter for CurrentPlayer
-     *
-     * @param currentPlayer
-     */
-    public void setCurrentPlayer(char currentPlayer) {
-        if (currentPlayer == 'B') {
-            this.currentPlayer = Color.BLACK;
-        }
-        if (currentPlayer == 'W') {
-            this.currentPlayer = Color.WHITE;
-        }
-    }
-
-    /**
      * Returns current state (board, player, moveNumber) as String
      *
      * @return
      */
     public String getCurrentStateToString() {
         StringBuilder currentState = new StringBuilder(moveNumber + " " + currentPlayer.getColorCode());
-        for (int row = 0; row < 6; row++) {
-            currentState.append("\n");
-            for (int column = 0; column < 5; column++)
-                currentState.append(board[row][column]);
-        }
+        currentState.append(board.toString());
         return currentState.toString();
     }
 
@@ -117,12 +86,12 @@ public class State {
 
         String[] firstLineArgs = lines[0].split(" ");
         setMoveNumber(Integer.parseInt(firstLineArgs[0]));
-        setCurrentPlayer(firstLineArgs[1].charAt(0));
+        currentPlayer = Color.getColorByChar(firstLineArgs[1].charAt(0));
 
         for (int lineIndex = 1; lineIndex < 7; lineIndex++) {
             newBoard[lineIndex - 1] = lines[lineIndex].toCharArray();
         }
-        setBoard(newBoard);
+        setBoard(new Board(newBoard));
     }
 
     /**
@@ -146,28 +115,18 @@ public class State {
      * @return true if game over, false else
      */
     public boolean moveByMove(Move move) {
-      
-        char pieceToMove = board[move.getFrom().getY()][move.getFrom().getX()];
+
+        Piece pieceToMove = board.getPieceByPosition(move.getFrom().getX(), move.getFrom().getY());
         if (isValidStartPiece(pieceToMove) && MoveService.isMoveValid(move, board)) {
             if (checkForGameOver(move)) return true;
             if (canPieceBePromoted(pieceToMove, move.getTo().getY())) {
-                pieceToMove = promotePawn(pieceToMove);
+                pieceToMove.promote();
             }
-            board[move.getTo().getY()][move.getTo().getX()] = pieceToMove;
-            board[move.getFrom().getY()][move.getFrom().getX()] = '.';
+            board.setPieceByPosition(move.getTo().getX(), move.getTo().getY(), pieceToMove);
+            board.setPieceByPosition(move.getFrom().getX(), move.getFrom().getY(), new Piece('.'));
             switchCurrentPlayer();
         }
         return false;
-    }
-
-    /**
-     * Promotes a pawn to queen
-     *
-     * @param pieceToMove piece to promote
-     * @return
-     */
-    private char promotePawn(char pieceToMove) {
-        return (char) (((int) pieceToMove) + 1);
     }
 
     /**
@@ -177,8 +136,8 @@ public class State {
      * @param yDestination y destination position
      * @return
      */
-    private boolean canPieceBePromoted(char pieceToMove, int yDestination) {
-        if (Character.toLowerCase(pieceToMove) != 'p') { //only check for pawns
+    private boolean canPieceBePromoted(Piece pieceToMove, int yDestination) {
+        if (pieceToMove.getFigure() != Figure.PAWN) { //only check for pawns
             return false;
         }
         if (currentPlayer == Color.BLACK && yDestination == 5) { // black pawn reaches end of board
@@ -208,10 +167,10 @@ public class State {
      * @param pieceToMove start piece of a move
      * @return
      */
-    private boolean isValidStartPiece(char pieceToMove) {
-        if (currentPlayer != PieceUtil.getColorForPiece(pieceToMove))
+    private boolean isValidStartPiece(Piece pieceToMove) {
+        if (currentPlayer != pieceToMove.getColor())
             return false;
-        if (pieceToMove == '.')
+        if (pieceToMove.getFigure() == Figure.EMPTY)
             return false;
 
         return true;
@@ -229,16 +188,16 @@ public class State {
 
     /**
      * checks if given move finishes the game
-     * 
+     * <p>
      * TODO: Should return the state (matt, unentschieden, ongoing) instead of a boolean.
      *
-     *@return true if game over, false else
      * @param move
+     * @return true if game over, false else
      */
     private boolean checkForGameOver(Move move) {
-        char targetPiece = Character.toLowerCase(board[move.getTo().getY()][move.getTo().getX()]);
-        if (targetPiece == 'k') {
-            System.out.println("Schach-Matt");
+        Piece targetPiece = board.getPieceByPosition(move.getTo().getX(), move.getTo().getY());
+        if (targetPiece.getFigure() == Figure.KING) {
+            System.out.println("Schach-Matt - " + currentPlayer + " gewinnt");
             return true;
         }
         if ((moveNumber == 40) && (currentPlayer == Color.BLACK)) {

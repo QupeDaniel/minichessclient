@@ -16,28 +16,6 @@ public class StateTest {
     }
 
     @Test
-    public void shouldGetInitialBoard() {
-        char[] expectedFirstLine = {'k', 'q', 'b', 'n', 'r'};
-        char[] expectedSecondLine = {'p', 'p', 'p', 'p', 'p'};
-        char[] expectedThirdAndForthLine = {'.', '.', '.', '.', '.'};
-        char[] expectedFithLine = {'P', 'P', 'P', 'P', 'P'};
-        char[] expectedSixthLine = {'R', 'N', 'B', 'Q', 'K'};
-
-        char[][] expectedState = {
-                expectedFirstLine,
-                expectedSecondLine,
-                expectedThirdAndForthLine,
-                expectedThirdAndForthLine,
-                expectedFithLine,
-                expectedSixthLine
-        };
-
-        char[][] initialState = state.getBoard();
-
-        assertThat(initialState, is(expectedState));
-    }
-
-    @Test
     public void shouldReturnInitialMoveNumber() {
         int initialMoveNumber = 1;
         int currentMoveNumber = state.getMoveNumber();

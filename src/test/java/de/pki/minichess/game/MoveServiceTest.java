@@ -12,19 +12,19 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class MoveServiceTest {
 
-  private char[][] oneFigureBoard;
+  private Board oneFigureBoard;
   private int xPositionOfFigure;
   private int yPositionOfFigure;
 
   @Before
   public void setUp() {
-    this.oneFigureBoard = new char[][] { //
+    this.oneFigureBoard = new Board(new char[][] { //
         { '.', '.', '.', '.', '.' }, //
         { '.', '.', '.', '.', '.' }, //
-        { '.', '.', 'X', '.', '.' }, //
+        { '.', '.', 'P', '.', '.' }, //
         { '.', '.', '.', '.', '.' }, //
         { '.', '.', '.', '.', '.' }, //
-        { '.', '.', '.', '.', '.' } };
+        { '.', '.', '.', '.', '.' } });
     this.xPositionOfFigure = 2;
     this.yPositionOfFigure = 2;
   }
@@ -277,38 +277,12 @@ public class MoveServiceTest {
   }
 
   private void setFigure(char figure) {
-    for (char[] line : this.oneFigureBoard) {
+    for (Piece[] line : this.oneFigureBoard.getBoard()) {
       for (int i = 0; i < line.length; i++) {
-        if (line[i] == 'X')
-          line[i] = figure;
+        if (line[i].getFigure() == Figure.PAWN)
+          line[i] = new Piece(figure);
       }
     }
-  }
-
-  private String boardToString() {
-    StringBuilder currentState = new StringBuilder();
-    for (int row = 0; row < 6; row++) {
-      currentState.append("\n");
-      for (int column = 0; column < 5; column++)
-        currentState.append(this.oneFigureBoard[row][column]);
-    }
-    return currentState.toString();
-  }
-
-  private String setToString(Set<Move> set) {
-    StringBuilder builder = new StringBuilder();
-    for (Move move : set) {
-      builder.append(move.toString() + "\n");
-    }
-    return builder.toString();
-  }
-
-  private String vectorToString(Vector<Move> vector) {
-    StringBuilder builder = new StringBuilder();
-    for (Move move : vector) {
-      builder.append(move.toString());
-    }
-    return builder.toString();
   }
 
   protected boolean compareTwoSets(Set one, Set two) {

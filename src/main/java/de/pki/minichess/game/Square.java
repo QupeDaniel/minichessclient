@@ -42,6 +42,15 @@ public class Square {
         return x;
     }
 
+    public char getXChessNotation() {
+        return (char) (x + 'a');
+    }
+
+    public int getYChessNotation() {
+        int offsetY = 6;
+        return offsetY - y;
+    }
+
     /**
      * Getter y position
      *

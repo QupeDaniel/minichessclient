@@ -19,6 +19,9 @@ public class Console {
 
   // The Client that sends the commands to the telnet server.
   private Client client;
+
+  private String color;
+
   // Reads input from the command line.
   private Scanner scanner = new Scanner(System.in);
 
@@ -60,9 +63,9 @@ public class Console {
     switch (Command.valueOf(command.trim().toUpperCase())) {
     case ACCEPT:
       if (parts.length == 2) {
-        response = this.accept(parts[1]);
+        response = this.accept(parts[1]) + "";
       } else if (parts.length == 3) {
-        response = this.accept(parts[1], parts[2]);
+        response = this.accept(parts[1], parts[2]) + "";
       } else {
         response = "Wrong number of arguments!";
       }
@@ -89,9 +92,9 @@ public class Console {
       break;
     case OFFER:
       if (parts.length == 1) {
-        response = this.offerGameAndWait();
+        response = this.offerGameAndWait() + "";
       } else if (parts.length == 2) {
-        response = this.offerGameAndWait(parts[1]);
+        response = this.offerGameAndWait(parts[1]) + "";
       } else {
         response = "Wrong number of arguments!";
       }
@@ -110,7 +113,7 @@ public class Console {
       response = this.rerate();
       break;
     case START:
-      response = this.runGame();
+      response = this.runGame();;
       break;
     case EXIT:
       response = this.exit();
@@ -150,12 +153,14 @@ public class Console {
 
   private String accept(String gameId) throws IOException {
     char response = this.client.accept(gameId);
-    return "Game started. You are " + response;
+    this.color = response + "";
+    return this.color;
   }
 
   private String accept(String gameId, String color) throws IOException {
     this.client.accept(gameId, color.charAt(0));
-    return "Game started. You are " + color.charAt(0);
+    this.color = color.charAt(0) + "";
+    return color;
   }
 
   private String changePassword(String password) throws IOException {
@@ -195,13 +200,14 @@ public class Console {
   }
 
   private String offerGameAndWait() throws IOException, RuntimeException {
-    char color = this.client.offerGameAndWait();
-    return "Game started. You play " + color;
+    this.color = this.client.offerGameAndWait() + "";
+    return color;
   }
 
   private String offerGameAndWait(String color) throws IOException, RuntimeException {
     this.client.offerGameAndWait(color.charAt(0));
-    return "Game started. You play " + color.charAt(0);
+    this.color = color.charAt(0) + "";
+    return color;
   }
 
   private String rerate() throws IOException {
@@ -210,8 +216,8 @@ public class Console {
 
   }
 
-  private String runGame() {
-    return new GameController().runGame();
+  private String runGame() throws IOException {
+    return new GameController().runGame(color, client);
   }
 
   private String exit() throws IOException {
@@ -222,5 +228,4 @@ public class Console {
   private void connect(String host, int port) throws IOException {
     this.client = new Client(host, port);
   }
-
 }
